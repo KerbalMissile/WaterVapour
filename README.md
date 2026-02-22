@@ -15,6 +15,7 @@ A lighweight Steam game launcher built in JavaScript and HTML. Currently only fo
 - **Switchable Folder Directory** - You can switch wich folder the app looks at for your games.
 - **Game Icon Viewing** - It will show the icons of each game in your steamapps folder. Note this isn't 100% it may not pick up EVERY icon
 - **Folder Memory** - Will remember your last input for your directory to your steamapps folder.
+- **New Version Detection & Prompt** - The app will automatically promp you to download the latest version if it does find one.
 
 ## Screenshots
 <img width="443" height="793" alt="image" src="https://github.com/user-attachments/assets/a4516466-33a4-4c21-956a-922a5557a732" />
@@ -50,4 +51,4 @@ If you want a feature please also make an issue report with `SUGGESTION:` in the
 This entire README was heavily inspired by [Snowify](https://github.com/nyakuoff/Snowify), that is why it looks so similar.
 
 > [!NOTE]
-> **AI Disclaimer:** Parts of this app were either made by AI or assisted by AI with. I am not an expert in JavaScript and still have issues in HTML sometimes, so AI does help me out. If you aren't comfortable with using this that is fine, I of course won't force anyone. The code may have flaws because of thism if you spot one or maybe think something could be better, please contribute.
+> **AI Disclaimer:** Parts of this app were either made by AI or assisted by with AI. I am not an expert in JavaScript and still have issues in HTML sometimes, so AI does help me out. If you aren't comfortable using this that is fine, I of course won't force anyone. The code may have flaws because of this if you spot one or maybe think something could be better, please contribute.
