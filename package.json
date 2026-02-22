@@ -1,0 +1,13 @@
+{
+  "name": "WaterVapour",
+  "productName": "WaterVapour",
+  "version": "1.0.0",
+  "description": "A minimal, high-performance Steam game launcher for Windows.",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^28.0.0"
+  }
+}
