@@ -1,6 +1,6 @@
 # WaterVapour
 
-![GitHub Repo stars](https://img.shields.io/github/stars/KerbalMissile/WaterVapour?style=flat)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/KerbalMissile/WaterVapour/total?color=%23056ae6)
 
 <img width="400" height="400" alt="WaterVapourLogo" src="https://github.com/user-attachments/assets/b27c599f-7edd-4325-a0ee-d8b3363aac96" />
 
