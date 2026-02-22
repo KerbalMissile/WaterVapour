@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WaterVapour</title>
     <style>
         :root {
@@ -18,11 +18,7 @@
             --red: #ff4444;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -63,7 +59,7 @@
         #titlebar h1 {
             font-size: 14px;
             font-weight: 600;
-            color: var(--text);
+            color: var(--blue);
             letter-spacing: 0.5px;
         }
 
@@ -75,13 +71,13 @@
 
         #titlebar .controls span {
             cursor: pointer;
-            color: var(--text);
+            color: var(--subtext);
             font-size: 16px;
             line-height: 1;
             transition: color 0.15s;
         }
 
-        #titlebar .controls span:hover { color: #dddddd; }
+        #titlebar .controls span:hover { color: var(--text); }
         #titlebar .controls .close:hover { color: var(--red); }
 
         #content {
@@ -98,7 +94,7 @@
             font-weight: 700;
             letter-spacing: 1px;
             text-transform: uppercase;
-            color: var(--text);
+            color: #ffffff;
             margin-bottom: 6px;
         }
 
@@ -123,7 +119,7 @@
 
         .btn {
             background: var(--blue);
-            color: var(--text);
+            color: #ffffff;
             border: none;
             border-radius: 6px;
             padding: 7px 14px;
@@ -138,7 +134,7 @@
 
         .btn-ghost {
             background: var(--surface2);
-            color: var(--text);
+            color: #ffffff;
             border: 1px solid var(--border);
         }
 
@@ -197,8 +193,8 @@
         .game-card:hover { border-color: var(--blue-dim); }
 
         .game-thumb {
-            width: 46px;
-            height: 34px;
+            width: 64px;
+            height: 30px;
             border-radius: 4px;
             object-fit: cover;
             background: var(--surface2);
@@ -225,9 +221,11 @@
             margin-top: 2px;
         }
 
+        .game-actions { flex-shrink: 0; }
+
         .btn-play {
             background: var(--blue);
-            color: var(--text);
+            color: #fff;
             border: none;
             border-radius: 5px;
             padding: 5px 12px;
@@ -251,7 +249,7 @@
 
     <div id="titlebar">
         <div class="left">
-            <img src="../Assets/WaterVapourLogo.png" alt="" />
+            <img id="logo" src="../Assets/WaterVapourLogo.png" alt="">
             <h1>WaterVapour</h1>
         </div>
         <div class="controls">
@@ -270,7 +268,7 @@
         </div>
 
         <div class="search-row">
-            <input id="search" type="text" placeholder="Search games…" oninput="filterGames()" />
+            <input id="search" type="text" placeholder="Search games…" oninput="filterGames()">
             <button class="btn btn-ghost" onclick="refresh()">↺ Refresh</button>
         </div>
 
@@ -285,8 +283,6 @@
         if (currentFolder) {
             document.getElementById('folder-display').textContent = currentFolder;
             scanGames();
-        } else {
-            renderGames([]);
         }
 
         async function pickFolder() {
@@ -299,30 +295,23 @@
         }
 
         async function scanGames() {
-            if (!currentFolder) {
-                setStatus('No folder selected.', true);
-                renderGames([]);
-                return;
-            }
-
+            if (!currentFolder) return;
             setStatus('Scanning…');
             const result = await window.electron.scanGames(currentFolder);
 
-            if (result?.error) {
+            if (result.error) {
                 setStatus(result.error, true);
                 allGames = [];
                 renderGames([]);
                 return;
             }
 
-            allGames = (result.games || []).sort((a, b) => a.name.localeCompare(b.name));
+            allGames = result.games.sort((a, b) => a.name.localeCompare(b.name));
             setStatus(allGames.length + ' game' + (allGames.length !== 1 ? 's' : '') + ' installed');
             renderGames(allGames);
         }
 
-        function refresh() {
-            scanGames();
-        }
+        function refresh() { scanGames(); }
 
         function filterGames() {
             const q = document.getElementById('search').value.toLowerCase();
@@ -333,44 +322,37 @@
             const list = document.getElementById('game-list');
             list.innerHTML = '';
 
-            if (!games || games.length === 0) {
-                list.innerHTML = '<div class="empty-state">No games found</div>';
+            if (games.length === 0) {
+                list.innerHTML = `<div class="empty-state">No games found</div>`;
                 return;
             }
 
-            for (const game of games) {
+            games.forEach(game => {
                 const card = document.createElement('div');
                 card.className = 'game-card';
                 card.innerHTML = `
                     <img class="game-thumb"
-                         src="https://cdn.cloudflare.steamstatic.com/steam/apps/${game.id}/capsule_sm_120.jpg"
-                         onerror="this.style.opacity='0'"
-                         alt="">
+                    src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${game.id}/header.jpg"
+                    onerror="this.onerror=null;
+                    this.src='https://cdn.cloudflare.steamstatic.com/steam/apps/${game.id}/capsule_231x87.jpg';
+                    this.onerror=()=>this.style.opacity='0';"
+                    alt="">
                     <div class="game-info">
-                        <div class="game-name">${escapeHtml(game.name)}</div>
-                        <div class="game-id">App ID: ${escapeHtml(game.id)}</div>
+                    <div class="game-name">${game.name}</div>
+                    <div class="game-id">App ID: ${game.id}</div>
                     </div>
                     <div class="game-actions">
-                        <button class="btn-play" onclick="window.electron.playGame('${String(game.id).replace(/'/g, '')}')">▶ Play</button>
+                    <button class="btn-play" onclick="window.electron.playGame('${game.id}')">▶ Play</button>
                     </div>
                 `;
                 list.appendChild(card);
-            }
+            });
         }
 
         function setStatus(msg, isError = false) {
             const el = document.getElementById('status');
             el.textContent = msg;
             el.className = isError ? 'error' : '';
-        }
-
-        function escapeHtml(s) {
-            return String(s)
-                .replaceAll('&', '&amp;')
-                .replaceAll('<', '&lt;')
-                .replaceAll('>', '&gt;')
-                .replaceAll('"', '&quot;')
-                .replaceAll("'", '&#039;');
         }
     </script>
 </body>

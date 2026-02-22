@@ -1,7 +1,46 @@
-const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Menu, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const { exec } = require('child_process');
+const https = require('https');
+
+const currentVersion = app.getVersion();
+const GITHUB_USER = 'KerbalMissile';
+const GITHUB_REPO = 'WaterVapour';
+
+function checkForUpdates() {
+    const options = {
+        hostname: 'api.github.com',
+        path: `/repos/${GITHUB_USER}/${GITHUB_REPO}/releases/latest`,
+        headers: { 'User-Agent': 'WaterVapour' }
+    };
+
+    https.get(options, (res) => {
+        let data = '';
+        res.on('data', chunk => data += chunk);
+        res.on('end', () => {
+            try {
+                const release = JSON.parse(data);
+                const latest = release.tag_name.replace('v', '');
+
+                if (latest !== currentVersion) {
+                    dialog.showMessageBox(mainWindow, {
+                        type: 'info',
+                        title: 'Update Available',
+                        message: `WaterVapour ${latest} is available!`,
+                        detail: `You are on version ${currentVersion}. Would you like to download the update?`,
+                        buttons: ['Download', 'Later'],
+                        defaultId: 0
+                    }).then(result => {
+                        if (result.response === 0) {
+                            shell.openExternal(release.html_url);
+                        }
+                    });
+                }
+            } catch (e) {}
+        });
+    }).on('error', () => {});
+}
 
 if (process.platform === 'win32') {
     app.setAppUserModelId('com.watervapour.app');
@@ -27,6 +66,10 @@ function createWindow() {
 
     Menu.setApplicationMenu(null);
     mainWindow.loadFile(path.join(__dirname, 'index.html'));
+
+    mainWindow.webContents.once('did-finish-load', () => {
+        checkForUpdates();
+    });
 }
 
 app.whenReady().then(createWindow);
