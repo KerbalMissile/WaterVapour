@@ -1,6 +1,6 @@
 # WaterVapour
 
-A lighweight Steam game launcher built in JavaScript and HTML.
+A lighweight Steam game launcher built in JavaScript and HTML. Currently only for Windows.
 
 > [!WARNING]
 > This is a **Beta** version of the app. It is still a work in progress and may have bugs or other issues.
